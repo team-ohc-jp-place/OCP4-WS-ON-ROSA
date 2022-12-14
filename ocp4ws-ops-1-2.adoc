@@ -33,15 +33,15 @@ OpenShiftでは、いくつかの方法でアプリケーションをクラス�
 
 OpenShift WebコンソールのRULは、etherpad OpenShift WebコンソールのURLを参照ください。
 
-<!--
+////
 `userX` としてログインしましょう。パスワードはetherpadの OpenShiftユーザのパスワードを参照ください。
 (etherpadで予約したuser1,user2などのIDです)
 
 
 Webコンソールの基本操作やクラスター内コンポーネントの基本的な動作の確認を行いたい場合は、前のハンズオンlink:ocp4ws-ops-1-1.adoc[OpenShiftクラスターへのログインと動作確認(Lab1-1)]を実施してください。
--->
+////
 
-OpenShift Webコンソールのアクセスに必要なセットアップおよびログイン方法は、link:rosa_access/README.md[こちら]を参照してください。
+OpenShift Webコンソールのアクセスに必要なセットアップおよびログイン方法は、link:https://github.com/team-ohc-jp-place/OCP4-WS-ON-ROSA/tree/main/rosa-access[こちら]を参照してください。
 
 == 1-2-3. コンテナイメージのビルドとデプロイ
 
@@ -66,7 +66,7 @@ image::images/ocp4ws-ops/ocp4-lab1-3-developer-console.png[]
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-create-project.png[]
 
-. Project名(例: `blog-userX` )を指定し、*Create* を選択します。
+. Project名(例: `blog-< LOGIN USER NAME >` )を指定し、*Create* を選択します。
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-create-project-blog.png[]
 +
@@ -80,7 +80,7 @@ NOTE: OpenShiftではProjectを作成することで、Projectと同じ名前の
 
 === 1-2-3-2. カタログでソースを指定してビルド&デプロイ
 
-. [</> Developer] > [+Add] > [Developer Catalog] > [All services] を選択します。Projectには先ほど作成したProject(例: `blog-userX` )が指定されていることに注意してください。
+. [</> Developer] > [+Add] > [Developer Catalog] > [All services] を選択します。Projectには先ほど作成したProject(例: `blog-< LOGIN USER NAME >` )が指定されていることに注意してください。
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-from-catalog.png[]
 
