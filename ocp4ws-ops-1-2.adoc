@@ -227,6 +227,6 @@ image::images/ocp4ws-ops/ocp4-lab1-3-create-route-confirm-result-pod.png[]
 
 以上で、コンテナイメージのビルドとデプロイ は完了です。
 
-///
+////
 次に link:ocp4ws-ops-1-3.adoc[Lab1-3: Prometheus JMX Exporterの展開] のハンズオンに進みます。
-///
+////
