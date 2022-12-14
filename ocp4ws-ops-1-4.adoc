@@ -21,10 +21,30 @@ Prometheus Operatorは次の機能を提供します。
 
 === 事前準備
 
-* 事前にJMX Exporterを用意しておく。
-* OpenShiftクラスターへのアクセス情報
+* 事前にJMX Exporterを用意しておく。( Lab 1-3 )
 
-== 1-4-2. Prometheus Operatorの展開
+== 1-4-2. ログインアカウントへcluster-admin権限の付与
+
+このシナリオを実行するために、OpenShift ログインアカウントに対し、cluster-admin権限を付与します。
+
+NOTE: OpenShiftを利用者として使用する場合は、cluster-admin権限は付与しないのが一般的です。ここでは、ハンズオンシナリオの便宜上付与する手段をとっていますが、必ずしも望ましい対応ではないという点にご注意ください。一方でどの範囲で付与するのが適切であるかは、組織のプロセスや運用体制、OpenShiftの利用形態等と、管理者権限による操作に許容されるリードタイムとリスクのバランス等、様々な要素を考慮して決定すべき事項となります。
+
+=== Bastionマシンから、rosaコマンドの実行
+
+NOTE: ROSAの場合、権限付与の操作は、rosa cli から行うことが可能です。
+
+terminalソフトウェアや、sshコマンドで、Bastionマシンへログインします。接続に必要な情報は、Eterpad からご確認ください。
+
+[source,bash,role="execute"]
+----
+[testuser30@ip-10-0-93-181 ~]$ rosa grant user cluster-admin --user <LOGIN USER NAME> --cluster 'rosa-qsfpw'
+I: Granted role 'cluster-admins' to user 'XXXXXXXXX' on cluster 'rosa-qsfpw'
+[testuser30@ip-10-0-93-181 ~]$
+----
+
+コマンドの実行が完了したら、OpenShift Console ( Web コンソール）を再ログインしてください。
+
+== 1-4-3. Prometheus Operatorの展開
 
 === Project作成
 ``oc project``コマンドを使用して、現在指定されているProjectがJMX Exporterをデプロイした"userX-jmx-monitor"であることを確認してください。 +
@@ -163,4 +183,22 @@ prometheus-operator-bd98985fd-vcnw6   1/1     Running   0          5m52s
 
 '''
 
-以上で、Promethus Operatorの準備が整いました。次のlink:ocp4ws-ops-1-5.adoc[CustomResourceの設定]作業に進みます。
+== 1-4-4. ログインアカウントからcluster-admin権限の削除
+NOTE: ここまでの操作が完了したら、必ず行ってください。
+NOTE: ROSAの場合、権限付与の操作は、rosa cli から行うことが可能です。
+
+terminalソフトウェアや、sshコマンドで、Bastionマシンへログインします。接続に必要な情報は、Eterpad からご確認ください。
+
+[source,bash,role="execute"]
+----
+[testuser30@ip-10-0-93-181 ~]$ rosa revoke user cluster-admin --user <LOGIN USER NAME> --cluster 'rosa-qsfpw'
+? Are you sure you want to revoke role cluster-admins from user XXXXXXX in cluster rosa-qsfpw? Yes
+I: Revoked role 'cluster-admins' from user 'XXXXXXX' on cluster 'rosa-qsfpw'
+[testuser30@ip-10-0-93-181 ~]$ 
+----
+
+``rosa revoke``コマンドの実行すると、権限の削除に関して、確認されますので、内容に問題がなければ、'Yes' を入力してください。
+
+操作が完了したら、OpenShift Console ( Web コンソール）を再ログインしてください。
+
+以上で、Promethus Operatorの準備が整いました。
