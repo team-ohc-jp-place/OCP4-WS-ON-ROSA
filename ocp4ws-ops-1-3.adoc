@@ -115,139 +115,123 @@ image::images/ocp4ws-ops/lab1-3-012.png[]
 NOTE: javaの起動パラメータとして、jarファイルと設定ファイルを指定しています。これらのファイルは、入手元のgitリポジトリに配置されていたもので、コンテナをビルドする際に、コンテナ内に配置されたものとなります。 +
 
 image::images/ocp4ws-ops/lab1-3-013.png[]
+
+入力が完了したら、画面下部の"保存"ボタンを押下します。
+
 image::images/ocp4ws-ops/lab1-3-014.png[]
+
+PODの入れ替えが完了するまで待ちます。（通常、数秒で完了します）
+
+
+==== 3. サービスの追加
+ここまでの操作によって、コンテナが提供する通常の8080ポートに紐付く機能に加え、9404ポートでJMXの情報参照用のサービスが有効になりました。
+続く操作では。OpenShift 内部で、他PODから参照できるように、サービスを作成します。
+
+PODが再び、Runningステータスとなったら、リソースタブ内のサービス欄にある、"jboss-eap-prometheus" リンクをクリックします。
+
 image::images/ocp4ws-ops/lab1-3-015.png[]
+
+サービスの詳細画面が表示されるので、YAMLタブをクリックします。
+
 image::images/ocp4ws-ops/lab1-3-016.png[]
+
+YAML定義のspec.ports セクションを特定し、下記のように編集します。
+
+* 編集前
+[source]
+----
+...
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+...
+----
+
+* 編集後
+[source]
+----
+...
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: 9404-tcp
+      protocol: TCP
+      port: 9404
+      targetPort: 9404
+...
+----
+
+編集が完了したら、"保存"ボタンをクリックします。
+
 image::images/ocp4ws-ops/lab1-3-017.png[]
+
+正常に更新が完了すると、[jboss-eap-prometheusがバージョンXXXXXに更新されました。]とメッセージが表示されます。メッセージを確認できたら、トポロジーメニューを選択します。
+
 image::images/ocp4ws-ops/lab1-3-018.png[]
+
+Deploymentの詳細情報にあるリソースタブ内のサービスエントリーとして、9404ポートが追加されていることを確認します。
+
 image::images/ocp4ws-ops/lab1-3-019.png[]
+
+==== 4. JMX(9404)ポートの公開（routeの作成）
+作成したサービスを外部へ公開します。
+
+NOTE: この操作は、本来、OpenShiftの外部からアクセスするための操作となるため、アクセスがOpenShift 内部で完結する場合は不要の操作となります。今回は、確認の便宜上、行っています。
+
+Administratorパースペクティブに画面を切り替えます。
+
 image::images/ocp4ws-ops/lab1-3-020.png[]
+
+ネットワークメニューより、ルートを選択します。
+
 image::images/ocp4ws-ops/lab1-3-021.png[]
+
+画面右上の"ルートの作成"ボタンを押下します。
+
 image::images/ocp4ws-ops/lab1-3-022.png[]
+
+各種フィールドに、下記の情報を入力または、選択します。
+
+|===
+|フィールド名|値
+
+|名前
+|tcp-9404
+|サービス
+|jboss-eap-prometheus
+|ターゲットポート
+|9404→9404(TCP)
+|===
+
 image::images/ocp4ws-ops/lab1-3-023.png[]
+
+入力が完了したら、"作成"をボタンクリックします。
+
 image::images/ocp4ws-ops/lab1-3-024.png[]
+
+画面上部の”ルート”（親メニュー）をクリックします。
+
 image::images/ocp4ws-ops/lab1-3-025.png[]
+
+作成されたルートの一覧が表示されます。
+
 image::images/ocp4ws-ops/lab1-3-026.png[]
+
+==== 5. アクセス確認
+ルートとして公開されているリンクをたどり、アプリケーション本体および、JMXポートが正常に稼働しているか確認します。
+
+image::images/ocp4ws-ops/lab1-3-026.png[]
+
+jboss-eap-prometheus の場所フィールドのリンクをたどると、アプリケーション本体へアクセスすることが出来ます。
+
 image::images/ocp4ws-ops/lab1-3-027.png[]
+
+tcp-9404 の場所フィールドのリンクをたどると、JMXの応答データが表示されます。
+
 image::images/ocp4ws-ops/lab1-3-028.png[]
 
-
-
-
-
-ここでは、先程ビルドしたした「jboss-eap-prometheus」を利用して、アプリケーションを展開します。 +
-デプロイでは、Java Agent用JARファイルやJMX Exporter設定ファイルのパスを環境変数(jmx-prometheus.jar=9404)で指定します。 +
-
-[source,bash,role="execute"]
-----
-$ export JBOSS_HOME=/opt/eap
-
-$ oc new-app -i jboss-eap-prometheus:latest \
-  --name=jboss-eap-prometheus \
-  -e PREPEND_JAVA_OPTS="-javaagent:${JBOSS_HOME}/prometheus/jmx-prometheus.jar=9404:${JBOSS_HOME}/prometheus/config.yaml"
-
---> Found image add9eb8 (14 minutes old) in image stream "jmx/jboss-eap-prometheus" under tag "latest" for "jboss-eap-prometheus:latest"
-
-...(中略)
-
---> Success
-    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
-     'oc expose svc/jboss-eap-prometheus'
-    Run 'oc status' to view your app.
-----
-
-TIP: 必要に応じてJavaアプリケーションにAnnotationを付与することも可能です。 +
-
-[source,bash,role="execute"]
-----
-$ oc annotate svc/jboss-eap-prometheus prometheus.io/scrape='true'
-
-$ oc annotate svc/jboss-eap-prometheus prometheus.io/port='9404'
-
-$ oc get svc jboss-eap-prometheus -o jsonpath='{.metadata.annotations}' |jq
-{
-  "openshift.io/generated-by": "OpenShiftNewApp",
-  "prometheus.io/port": "9404",
-  "prometheus.io/scrape": "true"
-}
-----
-
-==== 2. 展開したJavaアプリケーションの確認 +
-
-この時点で「jboss-eap-prometheus-1」がRunning状態になれば、デプロイ成功です。 +
-JMX Exporter はデフォルトで9404ポートを公開しています。 +
-
-[source,bash,role="execute"]
-----
-$ oc get svc jboss-eap-prometheus
-NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                               AGE
-jboss-eap-prometheus   ClusterIP   172.30.187.179   <none>        8080/TCP,8443/TCP,8778/TCP,9404/TCP   46s
-
-$ oc get dc jboss-eap-prometheus
-NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
-jboss-eap-prometheus   1/1     1            1           52s
-
-$ oc get pod
-NAME                                   READY   STATUS      RESTARTS   AGE
-jboss-eap-prometheus-1-build           0/1     Completed   0          111s
-jboss-eap-prometheus-b8fccc765-jplx2   1/1     Running     0          57s
-----
-
-「jboss-eap-prometheus-b8fccc765-jplx2」(b8fccc765-jplx2はランダムに生成)がRunning状態になるまで待ちましょう。 +
-
-
-=== JavaアプリケーションのRoute設定
-
-==== 1. JavaアプリケーションのRouter接続
-
-次に「jboss-eap-prometheus」のアプリケーション(tcp-8080)ポートを、Routerに接続します。 +
-
-[source,bash,role="execute"]
-----
-$ oc expose svc/jboss-eap-prometheus --name=tcp-8080 --port=8080
-route.route.openshift.io/tcp-8080 exposed
-
-$ oc get route tcp-8080
-NAME       HOST/PORT                                                    PATH   SERVICES               PORT   TERMINATION   WILDCARD
-tcp-8080   tcp-8080-user1-jmx-monitor.apps.cluster-3adc.3adc.sandbox691.opentlc.com          jboss-eap-prometheus   8080                 None
-----
-
-``oc get route``コマンドの出力の、``HOST/PORT``のカラムに表示されるURLにブラウザからアクセスすると、アプリケーションコンテンツが確認できます。 +
-次のコマンドの出力で表示されるURLにブラウザでアクセスしてみましょう。JBoss EAPのインフォーメーション画面が表示されれば成功です。 +
-
-[source,bash,role="execute"]
-----
-$ echo http://$(oc get route tcp-8080 -ojsonpath='{.spec.host}')
-----
-
-image::images/ocp4ws-ops/jboss-eap-prometheus-8080.jpg[Jboss Application]
-
-==== 2. Prometheus ExporterのRouter接続
-
-先程と同様に「jboss-eap-prometheus」のPromtheus Exporter(tcp-9404)ポートを、Routerに接続します。 +
-
-----
-$ oc expose svc/jboss-eap-prometheus --name=tcp-9404 --port=9404
-route.route.openshift.io/tcp-9404 exposed
-
-$ oc get route tcp-9404
-NAME       HOST/PORT                                                    PATH   SERVICES               PORT   TERMINATION   WILDCARD
-tcp-9404   tcp-9404-user3-jmx.apps.cluster-3adc.3adc.sandbox691.opentlc.com          jboss-eap-prometheus   9404                 None
-----
-再度``HOST/PORT``のカラムに表示されるURLにブラウザからアクセスしてみましょう。 +
-
-[source,bash,role="execute"]
-----
-$ echo http://$(oc get route tcp-9404 -ojsonpath='{.spec.host}')
-----
-
-==== 3. JMX Exporterの確認を行います。 +
-
-PromSQLのクエリが確認できれば成功です。
-
-NOTE: ExporterがJVMから情報を集めるため少し時間がかかります。 +
-
-image::images/ocp4ws-ops/jboss-eap-prometheus-9404.jpg[Jboss Application]
-
 これで、JMX Exporterの設定は完了です。 +
-次にlink:ocp4ws-ops-1-4.adoc[Prometheus Operator]の設定作業に進みます。 +
