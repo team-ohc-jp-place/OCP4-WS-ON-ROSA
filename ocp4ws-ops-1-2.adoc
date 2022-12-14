@@ -1,6 +1,6 @@
 = Lab 1-2: コンテナイメージのビルドとデプロイ
 
-アプリケーションをOpenShiftクラスターで動作させます。Developer Catalogのテンプレートを使用してアプリケーションをデプロイします。
+アプリケーションをOpenShiftクラスターで動作させます。ここでは、OpenShift Console からの操作を中心に、Developer Catalogのテンプレートを使用してアプリケーションをデプロイします。OpenShift に手動でアプリケーションを配置する場合のもっとも簡単な操作方法となります。
 
 * A) 新規Projectの作成 (1-2-3-1)
 * B) カタログからデプロイ (1-2-3-2)
@@ -88,20 +88,21 @@ image::images/ocp4ws-ops/ocp4-lab1-3-from-catalog.png[]
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-from-catalog-python.png[]
 +
-[TIPS]
+[NOTE]
 ====
-NOTE: Developer CatalogからPythonアプリケーションを作成することで以下のリソースが作成されます。
+Developer CatalogからPythonアプリケーションを作成することで以下のリソースが作成されます。
 
 * Build Config
- ** Gitリポジトリからソースコードをビルド
+  ** Gitリポジトリからソースコードをビルド
 * Image Stream
- ** ビルド済イメージのトラッキング
+  ** ビルド済イメージのトラッキング
 * Deployment Config
- ** イメージ変更の際に新リビジョンにロールアウト
+  ** イメージ変更の際に新リビジョンにロールアウト
 * Service
- ** クラスター内にワークロードを公開
+  ** クラスター内にワークロードを公開
 * Route
- ** クラスター外にワークロードを公開
+  **クラスター外にワークロードを公開
+
 ====
 
 . アプリケーションのリポジトリなどを指定して、OpenShift上にアプリケーションをデプロイします。
@@ -134,10 +135,12 @@ NOTE: [</> Developer] > [Topology] から、アプリケーションのアイコ
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-topology.png[]
 +
-コンテナが作成され、起動していると[Metrics]タブでは以下のように表示されます。
+コンテナが作成され、起動(runnning)状態の場合、[Metrics]タブでは以下のように表示されます。（注意：図の様にグラフが表示されるまでは、数分かかります。）
 +
 image::images/ocp4ws-ops/ocp4-lab1-3-topology-pod-detail.png[]
 +
+
+////
 [TIPS]
 ====
 NOTE: 前のLab1-1でProjectのリソース状況を確認した時と同じように、Prometheus(+Grafana)のモニタリング状況を確認したり、yaml定義の確認、Eventの確認などができます。 +
@@ -146,6 +149,7 @@ NOTE: 前のLab1-1でProjectのリソース状況を確認した時と同じよ�
 
 image::images/ocp4ws-ops/ocp4-lab1-3-topology-pod-terminal.png[]
 ====
+////
 
 ---
 
@@ -191,7 +195,7 @@ image::images/ocp4ws-ops/ocp4-lab1-3-create-route-result.png[]
 
 === 1-2-3-5. アプリケーションの動作確認
 
-. [Networking] > [Routes] を選択し、blog用のRoute(例: `blog-userX`)の行にある *Location欄のリンク* を開きます。
+. [Networking] > [Routes] を選択し、blog用のRoute(例: `blog-< LOGIN USER NAME >`)の行にある *Location欄のリンク* を開きます。
  例) `+	
 http://blog-blog.apps.cluster-8jz2n.8jz2n.sandbox1903.opentlc.com+`
 +
@@ -213,7 +217,7 @@ image::images/ocp4ws-ops/ocp4-lab1-3-create-route-confirm-result-pod.png[]
 
 コンテンツ:
 
-* Project名(NameSpace): `trial-userX` (例: `trial-userX`)
+* Project名(NameSpace): `trial-< LOGIN USER NAME >` (例: `trial-< LOGIN USER NAME >`)
 * BaseImage(BuilderImage): `Python 3.9-ubi8`
 * Git Repository: `+https://github.com/sclorg/django-ex+`
 * Routes名: `trial`
@@ -221,4 +225,7 @@ image::images/ocp4ws-ops/ocp4-lab1-3-create-route-confirm-result-pod.png[]
 '''
 
 以上で、コンテナイメージのビルドとデプロイ は完了です。
+
+///
 次に link:ocp4ws-ops-1-3.adoc[Lab1-3: Prometheus JMX Exporterの展開] のハンズオンに進みます。
+///
