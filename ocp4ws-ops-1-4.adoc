@@ -197,7 +197,7 @@ I: Revoked role 'cluster-admins' from user 'XXXXXXX' on cluster 'rosa-qsfpw'
 [testuser30@ip-10-0-93-181 ~]$ 
 ----
 
-``rosa revoke``コマンドの実行すると、権限の削除に関して、確認されますので、内容に問題がなければ、'Yes' を入力してください。
+``rosa revoke``コマンドを実行すると、処理前に実行を確認されます。内容に問題がなければ、'Yes' を入力してください。
 
 操作が完了したら、OpenShift Console ( Web コンソール）を再ログインしてください。
 
