@@ -33,11 +33,15 @@ OpenShiftでは、いくつかの方法でアプリケーションをクラス�
 
 OpenShift WebコンソールのRULは、etherpad OpenShift WebコンソールのURLを参照ください。
 
+<!--
 `userX` としてログインしましょう。パスワードはetherpadの OpenShiftユーザのパスワードを参照ください。
 (etherpadで予約したuser1,user2などのIDです)
 
 
 Webコンソールの基本操作やクラスター内コンポーネントの基本的な動作の確認を行いたい場合は、前のハンズオンlink:ocp4ws-ops-1-1.adoc[OpenShiftクラスターへのログインと動作確認(Lab1-1)]を実施してください。
+-->
+
+OpenShift Webコンソールのアクセスに必要なセットアップおよびログイン方法は、link:rosa_access/README.md[こちら]を参照してください。
 
 == 1-2-3. コンテナイメージのビルドとデプロイ
 
