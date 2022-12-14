@@ -130,7 +130,11 @@ GitHubから認可レスポンスが返されて、ROSAにリダイレクトさ�
 ![ROSAの初回ログイン](./images/rosa-first-login.png)
 <div style="text-align: center;">ROSAの初回ログイン</div>
 
-これでROSAクラスター上でアプリケーションを開発・デプロイできるようになります。次の演習の[アプリケーションのデプロイのクイックスタート](../rosa-app-deploy-quickstart)に進んでください。
+これでROSAクラスター上でアプリケーションを開発・デプロイできるようになります。
+
+<--
+次の演習の[アプリケーションのデプロイのクイックスタート](../rosa-app-deploy-quickstart)に進んでください。
+-->
 
 ### ログインができない場合のトラブルシューティング
 
@@ -142,4 +146,6 @@ ROSAクラスターのIDP作成時の、GitHub OAuth AppsのクライアントID
 
 さらに、それでもうまくいかない場合、GitHub Oauth Appsを一旦削除・作成して、再設定してみてください。
 
+<--
 [HOME](../../README.md)
+-->
