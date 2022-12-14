@@ -45,6 +45,43 @@ Webコンソールの基本操作やクラスター内コンポーネントの�
 
 ==== 1. Project作成
 
+//// 
+image::images/ocp4ws-ops/prometheus-arch-jmx-exporter.jpg[] 
+////
+
+image::images/ocp4ws-ops/lab1-3-001.png[]
+image::images/ocp4ws-ops/lab1-3-002.png[]
+image::images/ocp4ws-ops/lab1-3-003.png[]
+image::images/ocp4ws-ops/lab1-3-004.png[]
+image::images/ocp4ws-ops/lab1-3-005.png[]
+image::images/ocp4ws-ops/lab1-3-006.png[]
+image::images/ocp4ws-ops/lab1-3-007.png[]
+image::images/ocp4ws-ops/lab1-3-008.png[]
+image::images/ocp4ws-ops/lab1-3-009.png[]
+image::images/ocp4ws-ops/lab1-3-010.png[]
+image::images/ocp4ws-ops/lab1-3-011.png[]
+image::images/ocp4ws-ops/lab1-3-012.png[]
+image::images/ocp4ws-ops/lab1-3-013.png[]
+image::images/ocp4ws-ops/lab1-3-014.png[]
+image::images/ocp4ws-ops/lab1-3-015.png[]
+image::images/ocp4ws-ops/lab1-3-016.png[]
+image::images/ocp4ws-ops/lab1-3-017.png[]
+image::images/ocp4ws-ops/lab1-3-018.png[]
+image::images/ocp4ws-ops/lab1-3-019.png[]
+image::images/ocp4ws-ops/lab1-3-020.png[]
+image::images/ocp4ws-ops/lab1-3-021.png[]
+image::images/ocp4ws-ops/lab1-3-022.png[]
+image::images/ocp4ws-ops/lab1-3-023.png[]
+image::images/ocp4ws-ops/lab1-3-024.png[]
+image::images/ocp4ws-ops/lab1-3-025.png[]
+image::images/ocp4ws-ops/lab1-3-026.png[]
+image::images/ocp4ws-ops/lab1-3-027.png[]
+image::images/ocp4ws-ops/lab1-3-028.png[]
+
+
+
+
+
 監視アプリケーション用の"userX-jmx-monitor"という名前のProjectを作ります。 +
 
 [source,bash,role="execute"]
