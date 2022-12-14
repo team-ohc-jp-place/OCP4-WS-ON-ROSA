@@ -184,7 +184,9 @@ prometheus-operator-bd98985fd-vcnw6   1/1     Running   0          5m52s
 '''
 
 == 1-4-4. ログインアカウントからcluster-admin権限の削除
+
 NOTE: ここまでの操作が完了したら、必ず行ってください。
+
 NOTE: ROSAの場合、権限付与の操作は、rosa cli から行うことが可能です。
 
 terminalソフトウェアや、sshコマンドで、Bastionマシンへログインします。接続に必要な情報は、Eterpad からご確認ください。
