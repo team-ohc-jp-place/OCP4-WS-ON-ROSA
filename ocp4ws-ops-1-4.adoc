@@ -46,7 +46,7 @@ I: Granted role 'cluster-admins' to user 'XXXXXXXXX' on cluster 'rosa-qsfpw'
 
 == 1-4-3. Prometheus Operatorの展開
 
-=== Project作成
+=== Projectの確認
 ``oc project``コマンドを使用して、現在指定されているProjectがJMX Exporterをデプロイした"userX-jmx-monitor"であることを確認してください。 +
 
 [source,bash,role="execute"]
