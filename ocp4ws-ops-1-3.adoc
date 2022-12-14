@@ -8,8 +8,11 @@ endif::[]
 
 = Lab 1-3: Prometheus JMX Exporterの展開
 
+1-3 〜 1-5 のシナリオでは、アプリケーションのモニタリングデータを詳細に収集する一つの方法を体験します。OpenShift 以外のkuberntes デストロ環境でも度々採用されるPrometheusに、JavaアプリケーションのJMXからデータを取得し、可視化するまでのセットアップを行います。
+通常、Prometheus のセットアップは、複雑な操作を伴いますが、OpenShift では、Operator を利用することで、省力的に専用の監視基盤を構築することができます。( 主に、Lab 1-4 、1-5 で扱います。)
+
 == 1-3-1. Labで扱うアプリケーション構成
-Lab 1-3 〜 1-5 では、オープンソースの監視ツールである"Prometheus"を扱います。 +
+
 このLab 1-3では、監視対象となるJBoss EAPのJavaアプリケーションをデプロイした後、PrometheusのJMX(Java Management Extensions) Exporterを使ってこのアプリケーションのメトリクスデータを公開します。 +
 後続するLab 1-4, 1-5で、Prometheus OperatorでPrometheusをデプロイし、JMXメトリクスデータを可視化します。 +
 
@@ -30,11 +33,13 @@ Java Agent 用 JAR ファイルからメトリクスを収集 +
 
 OpenShift WebコンソールのRULは、etherpad OpenShift WebコンソールのURLを参照ください。
 
+////
 `userX` としてログインしましょう。パスワードはetherpadの OpenShiftユーザのパスワードを参照ください。
 (etherpadで予約したuser1,user2などのIDです)
 
 
 Webコンソールの基本操作やクラスター内コンポーネントの基本的な動作の確認を行いたい場合は、前のハンズオンlink:ocp4ws-ops-1-1.adoc[OpenShiftクラスターへのログインと動作確認(Lab1-1)]を実施してください。
+////
 
 === Javaアプリケーションのビルド
 
