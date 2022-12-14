@@ -48,19 +48,72 @@ Webコンソールの基本操作やクラスター内コンポーネントの�
 //// 
 image::images/ocp4ws-ops/prometheus-arch-jmx-exporter.jpg[] 
 ////
+監視アプリケーション用の"<LOGIN USER NAME>-jmx-monitor"という名前のProjectを作ります。 +
+
+画面上部のプロジェクトドロップダウンリスとを展開し、プロジェクトの作成ボタンを押下します。
 
 image::images/ocp4ws-ops/lab1-3-001.png[]
+
+名前フィールドに、プロジェクト名（例："<LOGIN USER NAME>-jmx-monitor"）を入力し、作成ボタンを押下します。
+
 image::images/ocp4ws-ops/lab1-3-002.png[]
 image::images/ocp4ws-ops/lab1-3-003.png[]
+
+NOTE: 以降の作業は全て"userX-jmx-monitor"Projectで行います。 +
+
 image::images/ocp4ws-ops/lab1-3-004.png[]
+
+
+=== Javaアプリケーションのデプロイ
+
+==== 1. Javaアプリケーションのコンテナビルドと展開
+
+"＋追加"メニューを選択し、追加の方法として、”Git リポジトリー" を選択します。
+
 image::images/ocp4ws-ops/lab1-3-005.png[]
+
+Git リポジトリーURLフィールドに、取得元となるURLとして``https://github.com/openlab-red/jboss-eap-prometheus``を入力します。
+
 image::images/ocp4ws-ops/lab1-3-006.png[]
+
+指定された取得されたデータにもとづき、画面の表示が変わるので、"作成"ボタンを押下します。
+
 image::images/ocp4ws-ops/lab1-3-007.png[]
+
+画面が、トポロジービューに切り替わります。各種リソースの作成、コンテナイメージのビルド、アプリケーションの実行が逐次実行されます。Deploymentを示すアイコンをクリックすると、画面右側に詳細情報を表示する画面が展開されます。ここから、タスクの状況や作成されたリソースを確認することができます。
+
 image::images/ocp4ws-ops/lab1-3-008.png[]
 image::images/ocp4ws-ops/lab1-3-009.png[]
+
+Deploymentの処理が無事に完了すると、Pod がRunning ステータスとなります。
+
 image::images/ocp4ws-ops/lab1-3-010.png[]
+
+初期状態のアプリケーションのデプロイはここまでで完了です。
+
+==== 2. Deploymentへ追加設定
+
+Prometheus に対し、JMX のデータを提供できるように追加の設定を行います。
+
+Runningステータスとなったことが確認できたら、右上”アクション”ドロップダウンリストより、Deploymentの編集を選びます。
+
 image::images/ocp4ws-ops/lab1-3-011.png[]
+
+Deployment のフォームビューにて画面をスクロールし、下方の”環境変数セクション”を表示します。
+
 image::images/ocp4ws-ops/lab1-3-012.png[]
+
+各フィールドにそれぞれ下記の様に入力します。
+
+|===
+|名前|値
+
+|PREPEND_JAVA_OPTS
+|"-javaagent:/opt/eap/prometheus/jmx-prometheus.jar=9404:/opt/eap/prometheus/config.yaml"
+|===
+
+NOTE: javaの起動パラメータとして、jarファイルと設定ファイルを指定しています。これらのファイルは、入手元のgitリポジトリに配置されていたもので、コンテナをビルドする際に、コンテナ内に配置されたものとなります。 +
+
 image::images/ocp4ws-ops/lab1-3-013.png[]
 image::images/ocp4ws-ops/lab1-3-014.png[]
 image::images/ocp4ws-ops/lab1-3-015.png[]
@@ -81,103 +134,6 @@ image::images/ocp4ws-ops/lab1-3-028.png[]
 
 
 
-
-監視アプリケーション用の"userX-jmx-monitor"という名前のProjectを作ります。 +
-
-[source,bash,role="execute"]
-----
-## Attention: ご自身のユーザー名を入力ください。
-$ export TUTORIAL_USERNAME=userX
-
-$ export TUTORIAL_MONITOR_NAMESPACE=${TUTORIAL_USERNAME}-jmx-monitor
-
-$ oc new-project ${TUTORIAL_MONITOR_NAMESPACE}
-Now using project "user1-jmx-monitor" on server "https://api.cluster-3adc.3adc.sandbox691.opentlc.com:6443".
-
-You can add applications to this project with the 'new-app' command. For example, try:
-
-    oc new-app rails-postgresql-example
-
-to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
-
-    kubectl create deployment hello-node --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 -- /agnhost serve-hostname
-
-$ oc project
-Using project "user1-jmx-monitor" on server "https://api.cluster-8a39.8a39.sandbox135.opentlc.com:6443".
-----
-
-NOTE: 以降の作業は全て"userX-jmx-monitor"Projectで行います。 +
-
-通常は``oc new-project``コマンドでProjectを作成すると、自動的に作成したProjectが指定されます。``oc project``コマンドで現在指定しているProjectが"userX-jmx-monitor"であることを確認して下さい。 +
-
-==== 2. イメージビルド
-
-アプリケーションをリポジトリからCloneして、「jboss-eap-prometheus」イメージをビルドします。 +
-
-[source,bash,role="execute"]
-----
-$ cd ~/
-
-$ git clone https://github.com/openlab-red/jboss-eap-prometheus
-Cloning into 'jboss-eap-prometheus'...
-remote: Enumerating objects: 43, done.
-remote: Total 43 (delta 0), reused 0 (delta 0), pack-reused 43
-Unpacking objects: 100% (43/43), done.
-
-$ cd ./jboss-eap-prometheus/
-
-$ oc new-build .
---> Found container image b72b49b (3 years old) from registry.access.redhat.com for "registry.access.redhat.com/jboss-eap-7/eap70-openshift:latest"
-
-...(中略)
-
---> Creating resources with label build=jboss-eap-prometheus ...
-    imagestream.image.openshift.io "eap70-openshift" created
-    imagestream.image.openshift.io "jboss-eap-prometheus" created
-    buildconfig.build.openshift.io "jboss-eap-prometheus" created
---> Success
-----
-
-==== 3. ビルドの確認
-
-イメージビルドの状況をocコマンドで確認します。 +
-
-[source,bash,role="execute"]
-----
-$ oc logs -f bc/jboss-eap-prometheus
-Cloning "https://github.com/openlab-red/jboss-eap-prometheus" ...
-
-...(中略)
-
-Writing manifest to image destination
-Storing signatures
-Push successful
- ## イメージがPushされると自動的にログから開放されます。ログの完了を待ってください。
- ## もし「Errorとなってしまった場合は」、[Ctl] + [C]で出て再度やり直す
-
-$ oc get build
-NAME                     TYPE     FROM          STATUS     STARTED              DURATION
-jboss-eap-prometheus-1   Docker   Git@23160b8   Complete   About a minute ago   47s
-
-$ oc get imagestream
-NAME                   IMAGE REPOSITORY                                                            TAGS
-  UPDATED
-eap70-openshift        image-registry.openshift-image-registry.svc:5000/userX-jmx/eap70-openshift        latest
-  About a minute ago
-jboss-eap-prometheus   image-registry.openshift-image-registry.svc:5000/userX-jmx/jboss-eap-prometheus   latest
-  56 seconds ago
-----
-NOTE: 新しくイメージをPullするため、ビルドには少し時間がかかります。 +
-
-イメージビルドの状況をOpenShiftポータルから確認します。 +
-OpenShiftコンソールでは、ポータルの[Administrator]パースペクティブから[Builds]>[Image Streams]に遷移し、ビルドしたイメージがImageStreamに登録されていることを確認します。 +
-Projectは `userX-jmx-monitor` を選択することを忘れないようにしておきましょう。 +
-
-image::images/ocp4ws-ops/ocp4-i-lab1-1-imagestream-jboss.png[]
-
-=== Javaアプリケーションのデプロイ
-
-==== 1. Javaアプリケーションの展開
 
 ここでは、先程ビルドしたした「jboss-eap-prometheus」を利用して、アプリケーションを展開します。 +
 デプロイでは、Java Agent用JARファイルやJMX Exporter設定ファイルのパスを環境変数(jmx-prometheus.jar=9404)で指定します。 +
