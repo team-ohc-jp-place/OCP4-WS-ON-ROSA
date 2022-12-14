@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: prometheus-example-monitor
+  name: prometheus-user-monitor
+  namespace: user1-jmx-monitor
+spec:
+  endpoints:
+  - interval: 30s
+    port: 9404-tcp
+    scheme: http
+  selector:
+    matchLabels:
+      app: jboss-eap-prometheus
