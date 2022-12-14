@@ -18,7 +18,7 @@ image::images/ocp4ws-ops/ocp4-Lab1-3_overview.png[]
 
 OpenShiftでは、いくつかの方法でアプリケーションをクラスター上にデプロイすることができます。
 
-* 既存のDockerイメージを使ってデプロイする方法
+* 既存のコンテナイメージを使ってデプロイする方法
 * ソースコードとS2I(ツール)を使ってビルド&デプロイする方法
 * ソースコードとDockerfileを使ってビルド&デプロイする方法
 
@@ -46,10 +46,10 @@ OpenShift Webコンソールのアクセスに必要なセットアップおよ�
 
 == 1-2-3. コンテナイメージのビルドとデプロイ
 
-S2I(Source-to-Image)というツールを使って以下の2つのコンポーネントからコンテナイメージを生成し、コンテナアプリケーションをデプロイします。
+OpenShift環境上で、S2I(Source-to-Image)というツールを使ってコンテナイメージをビルドすることが可能です。以下の2つのコンポーネントからコンテナイメージを生成し、コンテナアプリケーションをデプロイします。
 
 * *リポジトリURL* : GitHubなどソースコード格納場所
-* *S2I Builder Image* : S2Iスクリプトが含まれているDockerイメージ
+* *S2I Builder Image* : S2Iスクリプトが含まれているコンテナイメージ
 
 またOpenShiftは、カタログ機能(Developer Catalog)を備えています。JavaやPython、nginxなどのS2I Builder Imageをカタログ上で選択、あるいはカタログ上に追加でき、アプリケーションを簡単にOpenShift上にデプロイできます。
 
@@ -126,6 +126,7 @@ image::images/ocp4ws-ops/ocp4-lab1-3-from-catalog-python-create-detail.png[]
 [TIPS]
 ====
 NOTE: [</> Developer] > [Topology] から、アプリケーションのアイコンをクリックすると、稼働状態を確認できます。ビルドおよびデプロイが完了するまでに少し時間がかかります。"Running" のステータスを確認できるまで待ちます。
+画面上に表示されるアイコン（今回の操作では、Python のDeployment)をクリックすると、Deploymentの状態やDeploymentによって定義されている各種リソースの状態を確認することができます。
 ====
 
 ---
